@@ -3,4 +3,6 @@
     <string name="name_catalog">Каталог</string>
     <string name="name_basket">Корзина</string>
     <string name="name_profile">Профиль</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
