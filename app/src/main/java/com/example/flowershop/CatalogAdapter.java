@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder>{
-    private List<ProductCard> items;
+    private List<Product> items;
     Context context;
-    public CatalogAdapter(Context context, List<ProductCard> items){
+    public CatalogAdapter(Context context, List<Product> items){
         this.context=context;
         this.items=items;
     }
@@ -32,7 +32,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CatalogAdapter.ViewHolder holder, int position) {
-        ProductCard item = items.get(position);
+        Product item = items.get(position);
         holder.imageView.setImageResource(item.getImageId());
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewPrice.setText(item.getPrice()+"₽");

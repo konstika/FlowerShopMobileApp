@@ -1,20 +1,20 @@
 package com.example.flowershop;
 
 
-public class ProductCard {
+public class Product {
     String title;
     int imageId;
     int price;
     int id;
     boolean inBasket;
-    ProductCard(String title, int imageId, int price, int id, boolean inBasket){
+    Product(String title, int imageId, int price, int id, boolean inBasket){
         this.title=title;
         this.imageId=imageId;
         this.price=price;
         this.id=id;
         this.inBasket=inBasket;
     }
-    ProductCard(String title, int imageId, int price){
+    Product(String title, int imageId, int price){
         this.title=title;
         this.imageId=imageId;
         this.price=price;
