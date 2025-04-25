@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        CoordinatorLayout fragmentContainer = findViewById(R.id.main);
         fragmentManager.beginTransaction().add(R.id.main, new CatalogFragment()).commit();
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_nav);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
