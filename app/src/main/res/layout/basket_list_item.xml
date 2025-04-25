@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:padding="10dp">
+    <ImageView
+        android:id="@+id/IV_image_product"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/test_image"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/TV_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:ignore="Suspicious0dp"
+        android:textSize="16sp"
+        android:text="Розы красные"
+        app:layout_constraintStart_toEndOf="@id/IV_image_product"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/BUT_minus"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"/>
+    <TextView
+        android:id="@+id/TV_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:ignore="Suspicious0dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="1000₽"
+        app:layout_constraintStart_toEndOf="@id/IV_image_product"
+        app:layout_constraintTop_toBottomOf="@id/TV_title"
+        app:layout_constraintEnd_toStartOf="@id/BUT_minus"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"/>
+    <ImageButton
+        android:id="@+id/BUT_minus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_minus"
+        app:tint="@color/white"
+        android:background="@color/accent_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/TV_count" />
+    <TextView
+        android:id="@+id/TV_count"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="10"
+        app:layout_constraintEnd_toStartOf="@id/BUT_plus"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageButton
+        android:id="@+id/BUT_plus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/icon_plus"
+        app:tint="@color/white"
+        android:background="@color/accent_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
