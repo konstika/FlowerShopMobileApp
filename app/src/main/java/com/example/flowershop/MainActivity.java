@@ -27,19 +27,22 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.main, new CatalogFragment()).commit();
+        fragmentManager.beginTransaction().add(R.id.fragment_container, new CatalogFragment()).commit();
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_nav);
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.catalog){
-                    fragmentManager.beginTransaction().replace(R.id.main, new CatalogFragment()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, new CatalogFragment()).commit();
+                    return true;
                 }
                 else if(item.getItemId() == R.id.basket){
-                    fragmentManager.beginTransaction().replace(R.id.main, new BasketFragment()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, new BasketFragment()).commit();
+                    return true;
                 }
                 else if(item.getItemId() == R.id.profile){
-                    fragmentManager.beginTransaction().replace(R.id.main, new ProfileFragment()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                    return true;
                 }
                 return false;
             }

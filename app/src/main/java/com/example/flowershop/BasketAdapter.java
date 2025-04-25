@@ -38,7 +38,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         holder.imageView.setImageResource(item.getImageId());
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewPrice.setText(item.getPrice()+"₽");
-        holder.textViewCount.setText(item.getCount());
+        holder.textViewCount.setText(String.valueOf(item.getCount()));
         holder.buttonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +47,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
                     //items.remove(position);
                     //notifyItemRemoved(position);
                 }else{
-                    holder.textViewCount.setText(item.getCount());
+                    holder.textViewCount.setText(String.valueOf(item.getCount()));
                 }
             }
         });
@@ -55,7 +55,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 item.addCount(1);
-                holder.textViewCount.setText(item.getCount());
+                holder.textViewCount.setText(String.valueOf(item.getCount()));
             }
         });
     }

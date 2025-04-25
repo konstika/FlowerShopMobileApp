@@ -2,11 +2,19 @@ package com.example.flowershop;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,5 +68,18 @@ public class BasketFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_basket, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView basketList = view.findViewById(R.id.RV_basket_list);
+        basketList.setLayoutManager(new LinearLayoutManager(getContext()));
+        List basketItems = new ArrayList<Product>();
+        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
+        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
+        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
+        BasketAdapter basketAdapter = new BasketAdapter(getContext(), basketItems);
+        basketList.setAdapter(basketAdapter);
     }
 }
