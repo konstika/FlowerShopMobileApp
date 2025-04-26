@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="250dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/IV_image_product"
-        android:layout_weight="6"
+        android:layout_weight="5"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scaleType="centerCrop"
         tools:ignore="Suspicious0dp"
         android:src="@color/black"/>
     <TextView
         android:id="@+id/TV_title"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         tools:ignore="Suspicious0dp"
@@ -38,4 +39,39 @@
         android:text="В корзину"
         android:backgroundTint="@color/accent_color"
         tools:ignore="Suspicious0dp"/>
+    <LinearLayout
+        android:id="@+id/BUTS_change_counts"
+        android:visibility="gone"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/BUT_minus"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_minus"
+            app:tint="@color/white"
+            android:background="@drawable/button_background" />
+        <TextView
+            android:id="@+id/TV_count"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="10" />
+        <ImageButton
+            android:id="@+id/BUT_plus"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_plus"
+            app:tint="@color/white"
+            android:background="@drawable/button_background" />
+    </LinearLayout>
 </LinearLayout>

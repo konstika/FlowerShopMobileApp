@@ -6,6 +6,7 @@ public class Product {
     int imageId;
     int price;
     int id;
+    //TODO remove count to Basket
     int count;
 
     Product(String title, int imageId, int price, int id, int count){

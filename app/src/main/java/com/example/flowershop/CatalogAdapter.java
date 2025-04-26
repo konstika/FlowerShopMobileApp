@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,26 +38,41 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         holder.imageView.setImageResource(item.getImageId());
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewPrice.setText(item.getPrice()+"₽");
+        holder.textViewCount.setText(String.valueOf(item.getCount()));
         if(item.inBasket()){
-            holder.buttonToBasket.setText("Перейти в корзину");
-            holder.buttonToBasket.setBackgroundTintList(
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.addit_color)));
+            holder.buttonToBasket.setVisibility(View.GONE);
+            holder.layoutChangeCounts.setVisibility(View.VISIBLE);
         }else{
-            holder.buttonToBasket.setText("В корзину");
-            holder.buttonToBasket.setBackgroundTintList(
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.accent_color)));
+            holder.buttonToBasket.setVisibility(View.VISIBLE);
+            holder.layoutChangeCounts.setVisibility(View.GONE);
         }
         holder.buttonToBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(item.inBasket()){
-                    //TODO replace of fragment
+                item.addCount(1);
+                holder.textViewCount.setText(String.valueOf(item.getCount()));
+                holder.buttonToBasket.setVisibility(View.GONE);
+                holder.layoutChangeCounts.setVisibility(View.VISIBLE);
+            }
+        });
+        holder.buttonMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                item.addCount(-1);
+                if(!item.inBasket()){
+                    holder.buttonToBasket.setVisibility(View.VISIBLE);
+                    holder.layoutChangeCounts.setVisibility(View.GONE);
                 }else{
-                    item.addCount(1);
-                    holder.buttonToBasket.setText("Перейти в корзину");
-                    holder.buttonToBasket.setBackgroundTintList(
-                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.addit_color)));
+                    holder.textViewCount.setText(String.valueOf(item.getCount()));
                 }
+            }
+        });
+
+        holder.buttonPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                item.addCount(1);
+                holder.textViewCount.setText(String.valueOf(item.getCount()));
             }
         });
     }
@@ -69,12 +86,21 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
         TextView textViewTitle;
         TextView textViewPrice;
         Button buttonToBasket;
+        LinearLayout layoutChangeCounts;
+        ImageButton buttonPlus;
+        ImageButton buttonMinus;
+        TextView textViewCount;
+
         ViewHolder(View view) {
             super(view);
             imageView = view.findViewById(R.id.IV_image_product);
             textViewTitle = view.findViewById(R.id.TV_title);
             textViewPrice = view.findViewById(R.id.TV_price);
             buttonToBasket = view.findViewById(R.id.BUT_to_basket);
+            layoutChangeCounts = view.findViewById(R.id.BUTS_change_counts);
+            buttonMinus = view.findViewById(R.id.BUT_minus);
+            buttonPlus = view.findViewById(R.id.BUT_plus);
+            textViewCount = view.findViewById(R.id.TV_count);
         }
     }
 }

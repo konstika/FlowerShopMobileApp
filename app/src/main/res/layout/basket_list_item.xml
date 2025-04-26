@@ -44,7 +44,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:padding="5dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/icon_minus"
         app:tint="@color/white"
         android:background="@color/accent_color"

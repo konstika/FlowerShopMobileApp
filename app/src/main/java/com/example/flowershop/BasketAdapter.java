@@ -31,10 +31,10 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
                 R.layout.basket_list_item, parent, false);
         return  new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder holder, int position) {
-        Product item = items.get(position);
+        int i = holder.getAdapterPosition();
+        Product item = items.get(i);
         holder.imageView.setImageResource(item.getImageId());
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewPrice.setText(item.getPrice()+"₽");
@@ -44,13 +44,15 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             public void onClick(View view) {
                 item.addCount(-1);
                 if(!item.inBasket()){
-                    //items.remove(position);
-                    //notifyItemRemoved(position);
+                    items.remove(i);
+                    notifyItemRemoved(i);
+                    notifyItemRangeChanged(i, items.size());
                 }else{
                     holder.textViewCount.setText(String.valueOf(item.getCount()));
                 }
             }
         });
+
         holder.buttonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
