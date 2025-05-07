@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder>{
@@ -35,8 +37,12 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull CatalogAdapter.ViewHolder holder, int position) {
         Product item = items.get(position);
-        holder.imageView.setImageResource(item.getImageId());
-        holder.textViewTitle.setText(item.getTitle());
+        Glide.with(context)
+                .load(item.getImageURL())
+                .placeholder(R.drawable.icon_catalog)
+                .error(R.drawable.icon_catalog)
+                .into(holder.imageView);
+        holder.textViewTitle.setText(item.getName());
         holder.textViewPrice.setText(item.getPrice()+"₽");
         holder.textViewCount.setText(String.valueOf(item.getCount()));
         if(item.inBasket()){

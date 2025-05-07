@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +76,14 @@ public class BasketFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView basketList = view.findViewById(R.id.RV_basket_list);
         basketList.setLayoutManager(new LinearLayoutManager(getContext()));
-        List basketItems = new ArrayList<Product>();
-        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        basketItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        BasketAdapter basketAdapter = new BasketAdapter(getContext(), basketItems);
-        basketList.setAdapter(basketAdapter);
+        FirestoreHandler firestoreHandler = FirestoreHandler.getInstance();
+        firestoreHandler.getBasketProducts().observe(getViewLifecycleOwner(), products -> {
+            if (products != null) {
+                BasketAdapter basketAdapter = new BasketAdapter(getContext(), products);
+                basketList.setAdapter(basketAdapter);
+            } else {
+                Toast.makeText(getContext(), "Ошибка загрузки продуктов", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

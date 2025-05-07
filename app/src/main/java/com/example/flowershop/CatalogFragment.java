@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,11 +75,15 @@ public class CatalogFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView catalogList = view.findViewById(R.id.RV_catalog_list);
         catalogList.setLayoutManager(new GridLayoutManager(getContext(),2));
-        List catalogItems = new ArrayList<Product>();
-        catalogItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        catalogItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        catalogItems.add(new Product("Розы красные",R.drawable.test_image,1000));
-        CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), catalogItems);
-        catalogList.setAdapter(catalogAdapter);
+
+        FirestoreHandler firestoreHandler = FirestoreHandler.getInstance();
+        firestoreHandler.getAllProducts().observe(getViewLifecycleOwner(), products -> {
+            if (products != null) {
+                CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), products);
+                catalogList.setAdapter(catalogAdapter);
+            } else {
+                Toast.makeText(getContext(), "Ошибка загрузки продуктов", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

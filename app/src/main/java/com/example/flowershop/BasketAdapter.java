@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>{
@@ -35,8 +37,12 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder holder, int position) {
         int i = holder.getAdapterPosition();
         Product item = items.get(i);
-        holder.imageView.setImageResource(item.getImageId());
-        holder.textViewTitle.setText(item.getTitle());
+        Glide.with(context)
+                .load(item.getImageURL())
+                .placeholder(R.drawable.icon_catalog)
+                .error(R.drawable.icon_catalog)
+                .into(holder.imageView);
+        holder.textViewTitle.setText(item.getName());
         holder.textViewPrice.setText(item.getPrice()+"₽");
         holder.textViewCount.setText(String.valueOf(item.getCount()));
         holder.buttonMinus.setOnClickListener(new View.OnClickListener() {

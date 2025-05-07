@@ -2,40 +2,56 @@ package com.example.flowershop;
 
 
 public class Product {
-    String title;
-    int imageId;
+    String id;
+    String name;
+    String description;
     int price;
-    int id;
-    //TODO remove count to Basket
-    int count;
+    String imageURL;
+    int count;//доп поле, в записи бд product его нет, извлекается из basket или order
 
-    Product(String title, int imageId, int price, int id, int count){
-        this.title=title;
-        this.imageId=imageId;
-        this.price=price;
-        this.id=id;
-        this.count=count;
-    }
-    Product(String title, int imageId, int price){
-        this.title=title;
-        this.imageId=imageId;
-        this.price=price;
-        this.id=0;
-        this.count=0;
-    }
-    public String getTitle(){return title;}
-    public int getImageId(){return imageId;}
-    public int getPrice(){return price;}
-    public boolean inBasket(){return count>0;}
-    public int getId(){return id;}
+    public Product(){}
 
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+    public String getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public int getPrice() {
+        return price;
+    }
+    public String getImageURL() {
+        return imageURL;
+    }
     public void setCount(int count) {
         this.count = count;
     }
     public int getCount() {
         return count;
     }
-    public void addCount(int k){
-        this.count+=k;
+    public boolean inBasket(){
+        return count>0;
+    }
+    public void addCount(int i){
+        this.count+=i;
+        //TODO: реализовать update бд
     }
 }
