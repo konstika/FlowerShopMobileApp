@@ -9,6 +9,7 @@ import androidx.lifecycle.Transformations;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -72,7 +73,7 @@ public class FirestoreHandler {
     }
 
 
-    public LiveData<Map<String, Integer>> getBasketCounts() {
+    private LiveData<Map<String, Integer>> getBasketCounts() {
         MutableLiveData<Map<String, Integer>> basketCountsLiveData = new MutableLiveData<>();
         executorService.execute(() -> {
             db.collection("basket").document(userId).get()
@@ -151,6 +152,40 @@ public class FirestoreHandler {
                     });
         });
         return productLiveData;
+    }
+    public void updateBasket(String productId, int count){
+        executorService.execute(() -> {
+            DocumentReference basketRef = db.collection("basket").document(userId);
+            basketRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<Map<String, Object>> products =
+                            (List<Map<String, Object>>) task.getResult().get("products");
+                    if (products == null) {
+                        products = new java.util.ArrayList<>();
+                    }
+
+                    boolean productExists = false;
+                    for (Map<String, Object> product : products) {
+                        if (product != null && productId.equals(product.get("productID"))) {
+                            productExists = true;
+                            if (count > 0) {
+                                product.put("count", count);
+                            } else {
+                                products.remove(product);
+                            }
+                            break;
+                        }
+                    }
+                    if (!productExists && count > 0) {
+                        Map<String, Object> productMap = new HashMap<>();
+                        productMap.put("productID", productId);
+                        productMap.put("count", count);
+                        products.add(productMap);
+                    }
+                    basketRef.update("products", products);
+                }
+            });
+        });
     }
 
 }

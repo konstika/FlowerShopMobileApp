@@ -56,6 +56,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 item.addCount(1);
+                FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 holder.textViewCount.setText(String.valueOf(item.getCount()));
                 holder.buttonToBasket.setVisibility(View.GONE);
                 holder.layoutChangeCounts.setVisibility(View.VISIBLE);
@@ -65,6 +66,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 item.addCount(-1);
+                FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 if(!item.inBasket()){
                     holder.buttonToBasket.setVisibility(View.VISIBLE);
                     holder.layoutChangeCounts.setVisibility(View.GONE);
@@ -78,6 +80,7 @@ public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 item.addCount(1);
+                FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 holder.textViewCount.setText(String.valueOf(item.getCount()));
             }
         });

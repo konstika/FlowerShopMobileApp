@@ -49,6 +49,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 item.addCount(-1);
+                FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 if(!item.inBasket()){
                     items.remove(i);
                     notifyItemRemoved(i);
@@ -63,6 +64,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 item.addCount(1);
+                FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 holder.textViewCount.setText(String.valueOf(item.getCount()));
             }
         });
