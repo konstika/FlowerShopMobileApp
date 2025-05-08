@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="310dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/button_background"
+    android:backgroundTint="@color/white"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/TV_date_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Заказ от 08.05.2025"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/TV_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Адрес: г. Москва, пр-кт Вернадского, д.78"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/TV_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Дата и время: 09.05.2025 13:00-13:30"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/TV_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="В сборке"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:paddingHorizontal="8sp"
+        android:paddingVertical="4sp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/addit_color"
+        android:layout_marginVertical="5dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RV_products_order_list"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        tools:listitem="@layout/products_order_list_item"/>
+    <Button
+        android:id="@+id/BUT_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/accent_color"
+        android:text="Отменить"/>
+
+</LinearLayout>

@@ -5,4 +5,6 @@
     <color name="grey">#D9D9D9</color>
     <color name="accent_color">#F54C49</color>
     <color name="addit_color">#F9AE86</color>
+    <color name="warn_color">#A6323B</color>
+    <color name="ok_color">#38A65F</color>
 </resources>

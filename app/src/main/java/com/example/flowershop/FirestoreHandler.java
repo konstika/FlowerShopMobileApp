@@ -9,6 +9,7 @@ import androidx.lifecycle.Transformations;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -211,7 +213,7 @@ public class FirestoreHandler {
         });
     }
 
-    private LiveData<Product> getProduct(String productId) {
+    public LiveData<Product> getProduct(String productId) {
         MutableLiveData<Product> productLiveData = new MutableLiveData<>();
         executorService.execute(() -> {
             db.collection("product").document(productId).get()
@@ -271,6 +273,60 @@ public class FirestoreHandler {
                     basketRef.update("products", products);
                 }
             });
+        });
+    }
+
+    public LiveData<List<Order>> getOrders() {
+        MutableLiveData<List<Order>> ordersLiveData = new MutableLiveData<>();
+        executorService.execute(() -> {
+            db.collection("order").whereEqualTo("userID", user.getId()).get()
+                    .addOnCompleteListener(task -> {
+                        executorService.execute(() -> {
+                            if (task.isSuccessful()) {
+                                List<Order> orders = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Order order = document.toObject(Order.class);
+                                    if (order != null) {
+                                        order.setId(document.getId());
+                                        List<Map<String, Object>> productMaps =
+                                                (List<Map<String, Object>>) document.get("products");
+                                        List<Product> products = new ArrayList<>();
+                                        try {
+                                            Log.d(TAG_LOG, "getOrders: onCompleteListener запущен в потоке: " + Thread.currentThread().getName());
+                                            for (Map<String, Object> entry : productMaps) {
+                                                String productId = entry.get("productID").toString();
+                                                Task<DocumentSnapshot> productTask =
+                                                        db.collection("product").document(productId).get();
+                                                Tasks.await(productTask);
+                                                if (productTask.isSuccessful() && productTask.getResult() != null) {
+                                                    Product product = productTask.getResult().toObject(Product.class);
+                                                    product.setCount(((Long) entry.get("count")).intValue());
+                                                    product.setPrice(((Long) entry.get("price")).intValue());
+                                                    products.add(product);
+                                                }
+                                            }
+                                            Log.d("LOG", String.valueOf(products.size()));
+                                        } catch (Exception e) {
+                                            Log.d("LOG", e.getMessage());
+                                        }
+                                        Log.d("LOG", String.valueOf(products.size()));
+                                        order.setProducts(products);
+                                    }
+                                    orders.add(order);
+                                }
+                                ordersLiveData.postValue(orders);
+                            } else {
+                                ordersLiveData.postValue(new ArrayList<>());
+                            }
+                        });
+                    });
+        });
+        return ordersLiveData;
+    }
+
+    public void updateOrder(String id, String status) {
+        executorService.execute(() -> {
+            db.collection("order").document(id).update("status", status);
         });
     }
 

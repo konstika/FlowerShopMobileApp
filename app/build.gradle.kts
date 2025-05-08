@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.circleimageview)
     implementation(libs.glide)
     implementation(platform(libs.firebase.bom))
     implementation(libs.appcompat)
