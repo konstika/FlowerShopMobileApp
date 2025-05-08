@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".AuthFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Авторизация" />
+    <EditText
+        android:id="@+id/ET_phone"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Номер телефона"
+        android:inputType="phone"/>
+    <EditText
+        android:id="@+id/ET_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Пароль"/>
+    <Button
+        android:id="@+id/BUT_reg"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/accent_color"
+        android:text="Нет аккаунта?"/>
+    <Button
+        android:id="@+id/BUT_enter"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/accent_color"
+        android:text="Войти"/>
+</LinearLayout>

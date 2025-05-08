@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +23,11 @@ import java.util.List;
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>{
     private List<Product> items;
     Context context;
-    public BasketAdapter(Context context, List<Product> items){
+    BasketFragment basketFragment;
+    public BasketAdapter(Context context, List<Product> items, BasketFragment basketFragment){
         this.context=context;
         this.items=items;
+        this.basketFragment = basketFragment;
     }
     @NonNull
     @Override
@@ -57,6 +60,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
                 }else{
                     holder.textViewCount.setText(String.valueOf(item.getCount()));
                 }
+                basketFragment.changeSum(items);
             }
         });
 
@@ -66,6 +70,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
                 item.addCount(1);
                 FirestoreHandler.getInstance().updateBasket(item.getId(), item.getCount());
                 holder.textViewCount.setText(String.valueOf(item.getCount()));
+                basketFragment.changeSum(items);
             }
         });
     }

@@ -1,20 +1,22 @@
 package com.example.flowershop;
 
 public class User {
-    int id;
+    String id;
     String username;
     String password;
     String phone;
-    public User(int id, String username, String password, String phone){
+    String basketID;
+    public User(){}
+    public User(String id, String username, String password, String phone){
         this.id=id;
         this.username=username;
         this.password=password;
         this.phone=phone;
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
-    public int getId() {
+    public String getId() {
         return id;
     }
     public void setUsername(String username) {
@@ -34,5 +36,11 @@ public class User {
     }
     public String getPhone() {
         return phone;
+    }
+    public void setBasketID(String basketID) {
+        this.basketID = basketID;
+    }
+    public String getBasketID() {
+        return basketID;
     }
 }

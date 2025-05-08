@@ -52,6 +52,8 @@ public class Product {
     }
     public void addCount(int i){
         this.count+=i;
-        //TODO: реализовать update бд
+    }
+    public int getSum(){
+        return count*price;
     }
 }
