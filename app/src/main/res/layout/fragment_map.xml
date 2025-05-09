@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MapFragment">
+
+    <EditText
+        android:id="@+id/ET_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите адрес"
+        android:inputType="text"
+        android:imeOptions="actionSearch"/>
+    <EditText
+        android:id="@+id/ET_apart_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите номер квартиры"
+        android:inputType="number"
+        android:imeOptions="actionSearch"/>
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/TV_address"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="10dp"
+        android:textSize="16sp"/>
+    <Button
+        android:id="@+id/BUT_input_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/accent_color"
+        android:layout_marginHorizontal="10dp"
+        android:text="Подтвердить"/>
+</LinearLayout>

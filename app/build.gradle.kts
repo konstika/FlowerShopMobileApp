@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.flowershop"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.maps.mobile)
     implementation(libs.circleimageview)
     implementation(libs.glide)
     implementation(platform(libs.firebase.bom))

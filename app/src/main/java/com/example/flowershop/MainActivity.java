@@ -14,12 +14,15 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.yandex.mapkit.MapKitFactory;
 
 public class MainActivity extends AppCompatActivity implements AuthListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapKitFactory.setApiKey("e1dd47ae-8b52-47dc-8a62-98002f8f601e");
+        MapKitFactory.initialize(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,14 @@ public class BasketFragment extends Fragment {
             BasketAdapter basketAdapter = new BasketAdapter(getContext(), products, BasketFragment.this);
             basketList.setAdapter(basketAdapter);
             changeSum(products);
+        });
+        Button butOrder = view.findViewById(R.id.BUT_place_order);
+        butOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requireActivity().getSupportFragmentManager().beginTransaction().
+                        replace(R.id.fragment_container, new OrderFragment()).commit();
+            }
         });
     }
     public void changeSum(List<Product> products){
