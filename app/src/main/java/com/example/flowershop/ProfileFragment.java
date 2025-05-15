@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class ProfileFragment extends Fragment {
 
@@ -37,12 +38,29 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView rvOrders = view.findViewById(R.id.RV_orders_list);
+        TextView tvEmpty = view.findViewById(R.id.emptyTextView);
         rvOrders.setLayoutManager(new
                 LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         FirestoreHandler.getInstance().getOrders().observe(getViewLifecycleOwner(), orders -> {
-            Log.d("LOG", orders.get(0).getProducts().toString());
-            OrderAdapter orderAdapter = new OrderAdapter(getContext(), orders);
-            rvOrders.setAdapter(orderAdapter);
+            if(orders.size()>0) {
+                OrderAdapter orderAdapter = new OrderAdapter(getContext(), orders);
+                rvOrders.setAdapter(orderAdapter);
+                rvOrders.setVisibility(View.VISIBLE);
+                tvEmpty.setVisibility(View.GONE);
+            }else{
+                rvOrders.setVisibility(View.GONE);
+                tvEmpty.setVisibility(View.VISIBLE);
+            }
+        });
+
+        TextView exit = view.findViewById(R.id.menu_exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirestoreHandler.getInstance().exit();
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new AuthFragment()).commit();
+            }
         });
     }
 }

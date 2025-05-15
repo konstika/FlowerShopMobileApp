@@ -79,6 +79,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public int getItemCount() {
         return items.size();
     }
+    public List<Product> getItems(){
+        return items;
+    }
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textViewTitle;

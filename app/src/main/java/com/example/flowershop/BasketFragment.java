@@ -17,11 +17,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BasketFragment extends Fragment {
     private TextView tvSum;
+    private TextView tvEmpty;
+    private BasketAdapter basketAdapter;
+    private RecyclerView basketList;
 
     public BasketFragment() {}
 
@@ -45,12 +51,13 @@ public class BasketFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvSum = view.findViewById(R.id.TV_sum);
-        RecyclerView basketList = view.findViewById(R.id.RV_basket_list);
+        tvEmpty = view.findViewById(R.id.emptyTextView);
+        basketList = view.findViewById(R.id.RV_basket_list);
         basketList.setLayoutManager(new LinearLayoutManager(getContext()));
         FirestoreHandler firestoreHandler = FirestoreHandler.getInstance();
         firestoreHandler.getBasketProducts().observe(getViewLifecycleOwner(), products -> {
             if(products == null){products = new ArrayList<Product>();}
-            BasketAdapter basketAdapter = new BasketAdapter(getContext(), products, BasketFragment.this);
+            basketAdapter = new BasketAdapter(getContext(), products, BasketFragment.this);
             basketList.setAdapter(basketAdapter);
             changeSum(products);
         });
@@ -58,8 +65,15 @@ public class BasketFragment extends Fragment {
         butOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requireActivity().getSupportFragmentManager().beginTransaction().
-                        replace(R.id.fragment_container, new OrderFragment()).commit();
+                if(basketAdapter.getItemCount()>0) {
+                    OrderFragment orderFragment = new OrderFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("products_in_basket",(Serializable) basketAdapter.getItems());
+                    orderFragment.setArguments(bundle);
+                    requireActivity().getSupportFragmentManager().beginTransaction().
+                            replace(R.id.fragment_container, orderFragment, "ORDER")
+                            .addToBackStack(null).commit();
+                }
             }
         });
     }
@@ -69,5 +83,14 @@ public class BasketFragment extends Fragment {
             sum+= product.getSum();
         }
         tvSum.setText(sum+"₽");
+        Toast.makeText(getContext(), "угуугу", Toast.LENGTH_SHORT).show();
+        if(sum==0){
+            basketList.setVisibility(View.GONE);
+            tvEmpty.setVisibility(View.VISIBLE);
+            Toast.makeText(getContext(), "угу", Toast.LENGTH_SHORT).show();
+        }else if(basketList.getVisibility()==View.GONE){
+            basketList.setVisibility(View.VISIBLE);
+            tvEmpty.setVisibility(View.GONE);
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.example.flowershop;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -120,6 +121,10 @@ public class FirestoreHandler {
                     }
                 });
         return loginResult;
+    }
+
+    public void exit(){
+        user = null;
     }
 
 
@@ -327,6 +332,36 @@ public class FirestoreHandler {
     public void updateOrder(String id, String status) {
         executorService.execute(() -> {
             db.collection("order").document(id).update("status", status);
+        });
+    }
+
+    public void addOrder(Order order){
+        executorService.execute(() -> {
+            List<Product> products = order.getProducts();
+            List<Map<String, Object>> productsInBasket = new ArrayList<>();
+            for (Product product: products) {
+                Map<String, Object> productInBasket = new HashMap<>();
+                productInBasket.put("count", product.getCount());
+                productInBasket.put("price", product.getPrice());
+                productInBasket.put("productID", product.getId());
+                productsInBasket.add(productInBasket);
+            }
+
+            Map<String, Object> orderDocument = new HashMap<>();
+            orderDocument.put("products", productsInBasket);
+            orderDocument.put("userID", order.getUserID());
+            orderDocument.put("date_order", order.getDate_order());
+            orderDocument.put("date", order.getDate());
+            orderDocument.put("time", order.getTime());
+            orderDocument.put("address", order.getAddress());
+            orderDocument.put("status", order.getStatus());
+            db.collection("order").add(orderDocument);
+        });
+    }
+    public void clearBasket(){
+        executorService.execute(() -> {
+            db.collection("basket").document(user.getBasketID()).
+                    update("products", new ArrayList<>());
         });
     }
 

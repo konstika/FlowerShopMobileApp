@@ -112,15 +112,12 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String address = addressTextView.getText().toString();
-                if (!address.isEmpty()) {
-                    OrderFragment orderFragment = new OrderFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("address", address);
-                    orderFragment.setArguments(bundle);
-
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, orderFragment).addToBackStack(null).commit();
-                }
+                Bundle bundle = new Bundle();
+                bundle.putString("address", address);
+                OrderFragment orderFragment = (OrderFragment)requireActivity()
+                        .getSupportFragmentManager().findFragmentByTag("ORDER");
+                orderFragment.setAddress(address);
+                requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
