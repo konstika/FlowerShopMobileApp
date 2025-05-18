@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.entity;
 
 import java.util.List;
 

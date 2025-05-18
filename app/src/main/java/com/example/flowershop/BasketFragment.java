@@ -5,11 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +15,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.flowershop.adapter.BasketAdapter;
+import com.example.flowershop.entity.Product;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BasketFragment extends Fragment {
     private TextView tvSum;
@@ -83,11 +82,9 @@ public class BasketFragment extends Fragment {
             sum+= product.getSum();
         }
         tvSum.setText(sum+"₽");
-        Toast.makeText(getContext(), "угуугу", Toast.LENGTH_SHORT).show();
         if(sum==0){
             basketList.setVisibility(View.GONE);
             tvEmpty.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), "угу", Toast.LENGTH_SHORT).show();
         }else if(basketList.getVisibility()==View.GONE){
             basketList.setVisibility(View.VISIBLE);
             tvEmpty.setVisibility(View.GONE);

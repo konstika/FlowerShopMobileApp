@@ -1,19 +1,22 @@
-package com.example.flowershop;
+package com.example.flowershop.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.flowershop.FirestoreHandler;
+import com.example.flowershop.R;
+import com.example.flowershop.entity.Order;
 
 import java.util.List;
 
@@ -59,12 +62,26 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.butCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    order.setStatus("Отменен");
-                    FirestoreHandler.getInstance().updateOrder(order.getId(), order.getStatus());
-                    holder.tvStatus.setText(order.getStatus());
-                    holder.tvStatus.setBackgroundTintList(
-                            ColorStateList.valueOf(context.getColor(R.color.warn_color)));
-                    holder.butCancel.setVisibility(View.GONE);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Вы уверены, что хотите отменить?");
+                    builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            order.setStatus("Отменен");
+                            FirestoreHandler.getInstance().updateOrder(order.getId(), order.getStatus());
+                            holder.tvStatus.setText(order.getStatus());
+                            holder.tvStatus.setBackgroundTintList(
+                                    ColorStateList.valueOf(context.getColor(R.color.warn_color)));
+                            holder.butCancel.setVisibility(View.GONE);
+                        }
+                    });
+                    builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builder.create().show();
                 }
             });
         }

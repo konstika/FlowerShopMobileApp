@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.entity;
 
 public class Basket {
     int id;

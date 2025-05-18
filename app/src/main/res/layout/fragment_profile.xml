@@ -34,16 +34,6 @@
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/CIV_ava"
         app:layout_constraintBottom_toTopOf="@id/title_orders">
-        <TextView
-            android:id="@+id/menu_update_conf_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Изменить личную информацию"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

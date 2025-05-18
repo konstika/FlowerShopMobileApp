@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_nav);
         FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigation.setVisibility(View.GONE);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, new AuthFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, new AuthFragment()).commit();
     }
 
     @Override
@@ -79,5 +79,12 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
         SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
         sharedPreferences.edit().putString("userID", FirestoreHandler.getInstance().getUserId()).apply();
         createViewForAuthUsers();
+    }
+
+    @Override
+    public void onExit(){
+        SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
+        sharedPreferences.edit().clear().apply();
+        createViewForUnAuthUsers();
     }
 }

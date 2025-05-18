@@ -18,7 +18,7 @@ public class RegistrFragment extends Fragment {
     private AuthListener authListener;
     public RegistrFragment() {}
 
-    public static RegistrFragment newInstance(String param1, String param2) {
+    public static RegistrFragment newInstance() {
         RegistrFragment fragment = new RegistrFragment();
         return fragment;
     }

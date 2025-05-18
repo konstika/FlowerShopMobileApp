@@ -2,13 +2,15 @@ package com.example.flowershop;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.flowershop.entity.Order;
+import com.example.flowershop.entity.Product;
+import com.example.flowershop.entity.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,6 +48,7 @@ public class FirestoreHandler {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         db.collection("user").document(userId).get().addOnCompleteListener(task -> {
             if(task.isSuccessful() && task.getResult()!=null) {
+                Log.d("LOGIN","GET USER");
                 this.user = task.getResult().toObject(User.class);
                 user.setId(userId);
                 result.postValue(true);
@@ -59,8 +60,47 @@ public class FirestoreHandler {
         return user.getId();
     }
 
-    public LiveData<Boolean> registerUser(String username, String password, String phone) {
-        MutableLiveData<Boolean> registrationResult = new MutableLiveData<>();
+    public String getUsername(){
+        return user.getUsername();
+    }
+
+    public LiveData<Boolean> registerUser(String username, String password, String phone){
+        MediatorLiveData<Boolean> registrationResult = new MediatorLiveData<>();
+        executorService.execute(() -> {
+            db.collection("user").whereEqualTo("username", username).get()
+                    .addOnCompleteListener(usernameTask -> {
+                        if (usernameTask.isSuccessful()) {
+                            QuerySnapshot usernameQuerySnapshot = usernameTask.getResult();
+                            if (!usernameQuerySnapshot.isEmpty()) {
+                                registrationResult.postValue(false);
+                                return;
+                            }
+                            db.collection("user").whereEqualTo("phone", phone).get()
+                                    .addOnCompleteListener(phoneTask -> {
+                                        if (phoneTask.isSuccessful()) {
+                                            QuerySnapshot phoneQuerySnapshot = phoneTask.getResult();
+                                            if (!phoneQuerySnapshot.isEmpty()) {
+                                                registrationResult.postValue(false);
+                                                return;
+                                            }
+                                            else{
+                                                registrationResult.addSource(createUser(username, password, phone),new Observer<Boolean>() {
+                                                    @Override
+                                                    public void onChanged(Boolean result) {
+                                                        registrationResult.postValue(result);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+        });
+        return registrationResult;
+    }
+
+    public LiveData<Boolean> createUser(String username, String password, String phone) {
+        MediatorLiveData<Boolean> registrationResult = new MediatorLiveData<>();
         executorService.execute(() -> {
             Map<String, Object> basketDocument = new HashMap<>();
             basketDocument.put("products", new ArrayList<>());
@@ -68,7 +108,6 @@ public class FirestoreHandler {
                     addOnCompleteListener(basketTask -> {
                         if (basketTask.isSuccessful()) {
                             String basketId = basketTask.getResult().getId();
-
                             Map<String, Object> userDocument = new HashMap<>();
                             userDocument.put("username", username);
                             userDocument.put("password", password);
@@ -77,48 +116,45 @@ public class FirestoreHandler {
                             db.collection("user").add(userDocument).
                                     addOnCompleteListener(userTask -> {
                                         if (userTask.isSuccessful()) {
-                                            setUser(basketTask.getResult().getId()).observeForever(
-                                                    result ->{
-                                                        registrationResult.postValue(result);
-                                                    });
+                                            LiveData<Boolean> setUserLiveData = setUser(userTask.getResult().getId());
+                                            registrationResult.addSource(setUserLiveData, new Observer<Boolean>() {
+                                                @Override
+                                                public void onChanged(Boolean result) {
+                                                    registrationResult.postValue(result);
+                                                }
+                                            });
                                         }else{
                                             registrationResult.postValue(false);
                                             db.collection("basket").document(basketId).delete();
                                         }
                                     });
-                        }else{
-                            registrationResult.postValue(false);
-                        }
+                        }else{registrationResult.postValue(false);}
                     });
         });
         return registrationResult;
     }
 
     public LiveData<Boolean> loginUser(String phone, String password) {
-        MutableLiveData<Boolean> loginResult = new MutableLiveData<>();
+        MediatorLiveData<Boolean> loginResult = new MediatorLiveData<>();
         db.collection("user")
                 .whereEqualTo("phone", phone)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (!task.getResult().isEmpty()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String rightPassword = document.getString("password");
-                                if (rightPassword.equals(password)) {
-                                    setUser(document.getId()).observeForever(result -> {
-                                        loginResult.postValue(result);
-                                    });
-                                    break;
-                                }else{
-                                    loginResult.postValue(false);
-                                }
-                            }
-                        }else{
-                            loginResult.postValue(false);
-                        }
-                    }else{
-                        loginResult.postValue(false);
-                    }
+                            Log.d("LOGIN","NO EMPTY");
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            String rightPassword = document.getString("password");
+                            if (rightPassword.equals(password)) {
+                                Log.d("LOGIN","PASSWORD");
+                                LiveData<Boolean> setUserLiveData = setUser(document.getId());
+                                loginResult.addSource(setUserLiveData, result -> {
+                                    Log.d("LOGIN","SET USER");
+                                    loginResult.postValue(result);
+                                });
+                            }else{loginResult.postValue(false);}
+                        }else{loginResult.postValue(false);}
+                    }else{loginResult.postValue(false);}
                 });
         return loginResult;
     }
@@ -127,10 +163,10 @@ public class FirestoreHandler {
         user = null;
     }
 
-
     public LiveData<List<Product>> getAllProducts() {
-        MutableLiveData<List<Product>> productsLiveData = new MutableLiveData<>();
-        return Transformations.switchMap(getBasketCounts(), basketCounts -> {
+        MediatorLiveData<List<Product>> mediatorLiveData = new MediatorLiveData<>();
+
+        mediatorLiveData.addSource(getBasketCounts(), basketCounts -> {
             executorService.execute(() -> {
                 db.collection("product").get()
                         .addOnCompleteListener(task -> {
@@ -140,24 +176,23 @@ public class FirestoreHandler {
                                     Product product = document.toObject(Product.class);
                                     if (product != null) {
                                         product.setId(document.getId());
-                                        if(basketCounts!=null) {
+                                        if (basketCounts != null) {
                                             product.setCount(basketCounts
-                                                    .getOrDefault(document.getId(),0));
-                                        }else{product.setCount(0);}
+                                                    .getOrDefault(document.getId(), 0));
+                                        } else {
+                                            product.setCount(0);
+                                        }
                                         products.add(product);
-                                    } else {
-                                        Log.w(TAG_LOG, "Couldn't convert document to Product");
                                     }
                                 }
-                                productsLiveData.postValue(products);
+                                mediatorLiveData.postValue(products);
                             } else {
-                                Log.e(TAG_LOG, "Error getting documents.", task.getException());
-                                productsLiveData.postValue(null);
+                                mediatorLiveData.postValue(null);
                             }
                         });
             });
-            return productsLiveData;
         });
+        return mediatorLiveData;
     }
 
 
@@ -196,26 +231,45 @@ public class FirestoreHandler {
     }
 
     public LiveData<List<Product>> getBasketProducts() {
-        return Transformations.switchMap(getBasketCounts(), basketCounts -> {
-            MutableLiveData<List<Product>> basketProductsLiveData = new MutableLiveData<>();
+        MediatorLiveData<List<Product>> mediatorLiveData = new MediatorLiveData<>();
+        LiveData<Map<String, Integer>> basketCountsLiveData = getBasketCounts();
+        mediatorLiveData.addSource(basketCountsLiveData, basketCounts -> {
             if (basketCounts == null) {
-                basketProductsLiveData.postValue(null);
-                return basketProductsLiveData;
+                mediatorLiveData.setValue(null);
+                return;
             }
+            Map<String, LiveData<Product>> productLiveDataMap = new HashMap<>();
+            Map<String, Integer> productCountsMap = new HashMap<>(basketCounts);
             List<Product> basketProducts = new ArrayList<>();
-            for (Map.Entry<String, Integer> entry : basketCounts.entrySet()) {
-                String productId = entry.getKey();
-                Integer count = entry.getValue();
-                getProduct(productId).observeForever(product -> {
-                    if (product != null) {
-                        product.setCount(count);
-                        basketProducts.add(product);
+
+            if(!basketCounts.isEmpty()) {
+                for (Map.Entry<String, Integer> entry : basketCounts.entrySet()) {
+                    String productId = entry.getKey();
+                    LiveData<Product> productLiveData = getProduct(productId);
+                    productLiveDataMap.put(productId, productLiveData);
+                }
+                if(!productLiveDataMap.isEmpty()){
+                    for (Map.Entry<String, LiveData<Product>> entry : productLiveDataMap.entrySet()) {
+                        String productId = entry.getKey();
+                        mediatorLiveData.addSource(entry.getValue(), new Observer<Product>() {
+                            @Override
+                            public void onChanged(Product product) {
+                                if (product != null) {
+                                    Integer count = productCountsMap.get(productId);
+                                    product.setCount(count);
+                                    basketProducts.add(product);
+                                    if (basketProducts.size() == productLiveDataMap.size()) {
+                                        mediatorLiveData.setValue(basketProducts);
+                                    }
+                                }
+                            }
+                        });
                     }
-                    basketProductsLiveData.postValue(basketProducts);
-                });
-            }
-            return basketProductsLiveData;
+                } else{mediatorLiveData.setValue(basketProducts);}
+
+            } else{mediatorLiveData.setValue(basketProducts);}
         });
+        return mediatorLiveData;
     }
 
     public LiveData<Product> getProduct(String productId) {
@@ -230,18 +284,9 @@ public class FirestoreHandler {
                                 if (product != null) {
                                     product.setId(document.getId());
                                     productLiveData.postValue(product);
-                                } else {
-                                    Log.w(TAG_LOG, "Couldn't convert document to Product class");
-                                    productLiveData.postValue(null);
-                                }
-                            } else {
-                                Log.w(TAG_LOG, "Product with id: " + productId + " not found");
-                                productLiveData.postValue(null);
-                            }
-                        } else {
-                            Log.e(TAG_LOG, "Error getting product with id: " + productId, task.getException());
-                            productLiveData.postValue(null);
-                        }
+                                } else {productLiveData.postValue(null);}
+                            } else {productLiveData.postValue(null);}
+                        } else {productLiveData.postValue(null);}
                     });
         });
         return productLiveData;
@@ -282,52 +327,80 @@ public class FirestoreHandler {
     }
 
     public LiveData<List<Order>> getOrders() {
-        MutableLiveData<List<Order>> ordersLiveData = new MutableLiveData<>();
+        MediatorLiveData<List<Order>> ordersLiveData = new MediatorLiveData<>();
         executorService.execute(() -> {
             db.collection("order").whereEqualTo("userID", user.getId()).get()
                     .addOnCompleteListener(task -> {
-                        executorService.execute(() -> {
-                            if (task.isSuccessful()) {
-                                List<Order> orders = new ArrayList<>();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Order order = document.toObject(Order.class);
-                                    if (order != null) {
-                                        order.setId(document.getId());
-                                        List<Map<String, Object>> productMaps =
-                                                (List<Map<String, Object>>) document.get("products");
-                                        List<Product> products = new ArrayList<>();
-                                        try {
-                                            Log.d(TAG_LOG, "getOrders: onCompleteListener запущен в потоке: " + Thread.currentThread().getName());
-                                            for (Map<String, Object> entry : productMaps) {
-                                                String productId = entry.get("productID").toString();
-                                                Task<DocumentSnapshot> productTask =
-                                                        db.collection("product").document(productId).get();
-                                                Tasks.await(productTask);
-                                                if (productTask.isSuccessful() && productTask.getResult() != null) {
-                                                    Product product = productTask.getResult().toObject(Product.class);
-                                                    product.setCount(((Long) entry.get("count")).intValue());
-                                                    product.setPrice(((Long) entry.get("price")).intValue());
-                                                    products.add(product);
-                                                }
-                                            }
-                                            Log.d("LOG", String.valueOf(products.size()));
-                                        } catch (Exception e) {
-                                            Log.d("LOG", e.getMessage());
-                                        }
-                                        Log.d("LOG", String.valueOf(products.size()));
-                                        order.setProducts(products);
-                                    }
-                                    orders.add(order);
-                                }
-                                ordersLiveData.postValue(orders);
-                            } else {
+                        if (task.isSuccessful()) {
+                            List<Order> orders = new ArrayList<>();
+                            List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                            if (documents.isEmpty()) {
                                 ordersLiveData.postValue(new ArrayList<>());
+                                return;
                             }
-                        });
+                            List<LiveData<Order>> orderLiveDataList = new ArrayList<>();
+                            for (DocumentSnapshot document : documents) {
+                                MediatorLiveData<Order> orderLiveData = new MediatorLiveData<>();
+                                Order order = document.toObject(Order.class);
+                                if (order != null) {
+                                    order.setId(document.getId());
+                                    List<Map<String, Object>> productMaps =
+                                            (List<Map<String, Object>>) document.get("products");
+                                    if (productMaps != null) {
+                                        List<Product> products = new ArrayList<>();
+                                        List<LiveData<Product>> productLiveDataList = new ArrayList<>();
+                                        for (Map<String, Object> entry : productMaps) {
+                                            String productId = entry.get("productID").toString();
+                                            MutableLiveData<Product> productLiveData = new MutableLiveData<>();
+                                            productLiveDataList.add(productLiveData);
+                                            db.collection("product").document(productId).get()
+                                                    .addOnCompleteListener(productTask -> {
+                                                        if (productTask.isSuccessful() && productTask.getResult() != null) {
+                                                            Product product = productTask.getResult().toObject(Product.class);
+                                                            if(product != null){
+                                                                product.setCount(((Long) entry.get("count")).intValue());
+                                                                product.setPrice(((Long) entry.get("price")).intValue());
+                                                                products.add(product);
+                                                                productLiveData.postValue(product);
+                                                            }
+
+                                                        } else {productLiveData.postValue(null);}
+                                                        if (products.size() == productLiveDataList.size()) {
+                                                            order.setProducts(products);
+                                                            orderLiveData.postValue(order);
+                                                        }
+                                                    });
+                                        }
+
+                                        if (productMaps.isEmpty()) {
+                                            order.setProducts(new ArrayList<>());
+                                            orderLiveData.postValue(order);
+                                        }
+                                    }else {
+                                        order.setProducts(new ArrayList<>());
+                                        orderLiveData.postValue(order);
+                                    }
+                                } else {orderLiveData.postValue(null);}
+                                orderLiveDataList.add(orderLiveData);
+
+                                ordersLiveData.addSource(orderLiveData, new Observer<Order>() {
+                                    @Override
+                                    public void onChanged(Order orderValue) {
+                                        if (orderValue != null) {
+                                            orders.add(orderValue);
+                                        }
+                                        if (orders.size() == orderLiveDataList.size()) {
+                                            ordersLiveData.postValue(orders);
+                                        }
+                                    }
+                                });
+                            }
+                        } else {ordersLiveData.postValue(new ArrayList<>());}
                     });
         });
         return ordersLiveData;
     }
+
 
     public void updateOrder(String id, String status) {
         executorService.execute(() -> {
@@ -346,7 +419,6 @@ public class FirestoreHandler {
                 productInBasket.put("productID", product.getId());
                 productsInBasket.add(productInBasket);
             }
-
             Map<String, Object> orderDocument = new HashMap<>();
             orderDocument.put("products", productsInBasket);
             orderDocument.put("userID", order.getUserID());
