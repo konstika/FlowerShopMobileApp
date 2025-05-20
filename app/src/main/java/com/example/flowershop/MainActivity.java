@@ -13,6 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.flowershop.ui.auth.AuthFragment;
+import com.example.flowershop.ui.basket.BasketFragment;
+import com.example.flowershop.ui.catalog.CatalogFragment;
+import com.example.flowershop.ui.profile.ProfileFragment;
+import com.example.flowershop.ui.auth.AuthListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yandex.mapkit.MapKitFactory;
 

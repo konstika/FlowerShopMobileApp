@@ -1,7 +1,6 @@
-package com.example.flowershop;
+package com.example.flowershop.ui.auth;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,13 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AuthFragment extends Fragment {
+import com.example.flowershop.FirestoreHandler;
+import com.example.flowershop.R;
+
+public class RegistrFragment extends Fragment {
     private AuthListener authListener;
+    public RegistrFragment() {}
 
-    public AuthFragment() {}
-
-    public static AuthFragment newInstance() {
-        AuthFragment fragment = new AuthFragment();
+    public static RegistrFragment newInstance() {
+        RegistrFragment fragment = new RegistrFragment();
         return fragment;
     }
 
@@ -41,36 +42,38 @@ public class AuthFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_auth, container, false);
+        return inflater.inflate(R.layout.fragment_registr, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         EditText etPhone = view.findViewById(R.id.ET_phone);
+        EditText etUsername = view.findViewById(R.id.ET_username);
         EditText etPassword = view.findViewById(R.id.ET_password);
         Button butEnter = view.findViewById(R.id.BUT_enter);
         Button butReg = view.findViewById(R.id.BUT_reg);
-        butEnter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String phone = etPhone.getText().toString();
-                String password = etPassword.getText().toString();
-                FirestoreHandler.getInstance().loginUser(phone, password)
-                        .observe(getViewLifecycleOwner(), result -> {
-                    if(result){
-                        authListener.onAuthSuccess();
-                    }else{
-                        Toast.makeText(getContext(), "Не удалось войти", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
         butReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String phone = etPhone.getText().toString();
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+                FirestoreHandler.getInstance().registerUser(username,password,phone)
+                        .observe(getViewLifecycleOwner(), result -> {
+                            if(result){
+                                authListener.onAuthSuccess();
+                            }else{
+                                Toast.makeText(getContext(), "Не удалось зарегистрироваться", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        });
+        butEnter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 requireActivity().getSupportFragmentManager().beginTransaction().
-                        replace(R.id.fragment_container, new RegistrFragment()).commit();
+                        replace(R.id.fragment_container, new AuthFragment()).commit();
             }
         });
     }

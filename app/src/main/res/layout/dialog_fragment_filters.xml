@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_corners_background"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Выберите фильтры:"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/TV_min_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Минимальная цена: нет"/>
+    <SeekBar
+        android:id="@+id/seek_bar_min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center"
+        android:thumbTint="@color/addit_color"
+        android:progressTint="@color/grey"
+        android:max="10000"/>
+    <TextView
+        android:id="@+id/TV_max_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Максимальная цена: нет"/>
+    <SeekBar
+        android:id="@+id/seek_bar_max"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center"
+        android:thumbTint="@color/addit_color"
+        android:progressTint="@color/grey"
+        android:max="10000"
+        android:progress="10000"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="Сортировка:"/>
+    <Spinner
+        android:id="@+id/spinner_sort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"/>
+    <Button
+        android:id="@+id/BUT_clear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Стереть"
+        android:backgroundTint="@color/accent_color"/>
+    <Button
+        android:id="@+id/BUT_apply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Применить"
+        android:backgroundTint="@color/accent_color"/>
+
+</LinearLayout>

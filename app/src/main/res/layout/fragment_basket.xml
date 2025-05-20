@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
-    tools:context=".CatalogFragment">
+    tools:context=".ui.catalog.CatalogFragment">
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

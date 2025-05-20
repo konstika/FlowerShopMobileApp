@@ -6,16 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
 
-import com.example.flowershop.entity.Order;
-import com.example.flowershop.entity.Product;
-import com.example.flowershop.entity.User;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.example.flowershop.model.Order;
+import com.example.flowershop.model.Product;
+import com.example.flowershop.model.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -163,18 +161,26 @@ public class FirestoreHandler {
         user = null;
     }
 
-    public LiveData<List<Product>> getAllProducts() {
+    public LiveData<List<Product>> getAllProducts(String serchText, int minPrice, int maxPrice, String sort) {
         MediatorLiveData<List<Product>> mediatorLiveData = new MediatorLiveData<>();
-
         mediatorLiveData.addSource(getBasketCounts(), basketCounts -> {
             executorService.execute(() -> {
-                db.collection("product").get()
+                Query query = db.collection("product")
+                        .whereGreaterThanOrEqualTo("price", minPrice)
+                        .whereLessThanOrEqualTo("price", maxPrice);
+                if(sort.equals("SORT")){
+                    query = query.orderBy("price", Query.Direction.DESCENDING);
+                }else if(sort.equals("REVERSE")){
+                    query = query.orderBy("price", Query.Direction.ASCENDING);
+                }
+                query.get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 List<Product> products = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Product product = document.toObject(Product.class);
-                                    if (product != null) {
+                                    if (product != null && product.getName()
+                                            .toLowerCase().contains(serchText.toLowerCase())) {
                                         product.setId(document.getId());
                                         if (basketCounts != null) {
                                             product.setCount(basketCounts
@@ -329,8 +335,9 @@ public class FirestoreHandler {
     public LiveData<List<Order>> getOrders() {
         MediatorLiveData<List<Order>> ordersLiveData = new MediatorLiveData<>();
         executorService.execute(() -> {
-            db.collection("order").whereEqualTo("userID", user.getId()).get()
-                    .addOnCompleteListener(task -> {
+            db.collection("order").whereEqualTo("userID", user.getId())
+                    .orderBy("date_order", Query.Direction.DESCENDING)
+                    .get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             List<Order> orders = new ArrayList<>();
                             List<DocumentSnapshot> documents = task.getResult().getDocuments();
@@ -423,8 +430,7 @@ public class FirestoreHandler {
             orderDocument.put("products", productsInBasket);
             orderDocument.put("userID", order.getUserID());
             orderDocument.put("date_order", order.getDate_order());
-            orderDocument.put("date", order.getDate());
-            orderDocument.put("time", order.getTime());
+            orderDocument.put("date_delivery", order.getDate_delivery());
             orderDocument.put("address", order.getAddress());
             orderDocument.put("status", order.getStatus());
             db.collection("order").add(orderDocument);

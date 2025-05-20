@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.ui.auth;
 
 public interface AuthListener {
     void onAuthSuccess();

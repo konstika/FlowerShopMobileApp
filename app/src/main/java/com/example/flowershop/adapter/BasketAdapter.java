@@ -12,10 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.flowershop.BasketFragment;
+import com.example.flowershop.ui.basket.BasketFragment;
 import com.example.flowershop.FirestoreHandler;
 import com.example.flowershop.R;
-import com.example.flowershop.entity.Product;
+import com.example.flowershop.model.Product;
 
 import java.util.List;
 

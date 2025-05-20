@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flowershop.FirestoreHandler;
 import com.example.flowershop.R;
-import com.example.flowershop.entity.Order;
+import com.example.flowershop.model.Order;
 
 import java.util.List;
 
@@ -39,8 +39,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull OrderAdapter.ViewHolder holder, int position) {
         Order order = orders.get(position);
-        holder.tvDateOrder.setText("Заказ от "+order.getDate_order());
-        holder.tvDate.setText("Дата и время: "+order.getDate()+" "+order.getTime());
+        holder.tvDateOrder.setText("Заказ от "+order.getStrDate_order());
+        holder.tvDate.setText("Дата и время: "+order.getStrDate_delivery()+" "+order.getStrTime_delivery());
         holder.tvAddress.setText("Адрес: "+order.getAddress());
         holder.rvProducts.setLayoutManager(new
                 LinearLayoutManager(context, RecyclerView.VERTICAL, false));

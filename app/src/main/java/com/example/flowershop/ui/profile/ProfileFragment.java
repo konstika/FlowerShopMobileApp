@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.ui.profile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.flowershop.ui.auth.AuthListener;
+import com.example.flowershop.FirestoreHandler;
+import com.example.flowershop.R;
 import com.example.flowershop.adapter.OrderAdapter;
 
 public class ProfileFragment extends Fragment {

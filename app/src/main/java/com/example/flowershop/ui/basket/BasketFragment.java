@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.ui.basket;
 
 import android.os.Bundle;
 
@@ -13,10 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.flowershop.FirestoreHandler;
+import com.example.flowershop.R;
 import com.example.flowershop.adapter.BasketAdapter;
-import com.example.flowershop.entity.Product;
+import com.example.flowershop.model.Product;
 
 import java.io.Serializable;
 import java.util.ArrayList;

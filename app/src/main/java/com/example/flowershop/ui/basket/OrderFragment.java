@@ -1,4 +1,4 @@
-package com.example.flowershop;
+package com.example.flowershop.ui.basket;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,9 +18,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.flowershop.entity.Order;
-import com.example.flowershop.entity.Product;
+import com.example.flowershop.FirestoreHandler;
+import com.example.flowershop.R;
+import com.example.flowershop.model.Order;
+import com.example.flowershop.model.Product;
+import com.google.firebase.Timestamp;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,8 +33,6 @@ import java.util.List;
 public class OrderFragment extends Fragment {
     private ImageView selectedImageView;
     private String address;
-    private String date;
-    private String time;
     private Calendar calendar;
     private int year;
     private int month;
@@ -168,11 +171,8 @@ public class OrderFragment extends Fragment {
                     Order order = new Order();
                     order.setProducts(productsInBasket);
                     order.setStatus("В сборке");
-                    order.setDate_order(String.format("%02d.%02d.%04d",
-                            calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1,
-                            calendar.get(Calendar.YEAR)));
-                    order.setDate(String.format("%02d.%02d.%04d", day, month + 1, year));
-                    order.setTime(String.format("%02d:%02d", hour, minute));
+                    order.setDate_order(new Timestamp(calendar.getTime()));
+                    order.setDate_delivery(year, month+1, day, hour, minute);
                     order.setAddress(address);
                     order.setUserID(FirestoreHandler.getInstance().getUserId());
                     FirestoreHandler.getInstance().addOrder(order);

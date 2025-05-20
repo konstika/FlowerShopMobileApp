@@ -55,7 +55,8 @@
             android:scaleType="fitCenter"
             android:src="@drawable/icon_minus"
             app:tint="@color/white"
-            android:background="@drawable/round_corners_background" />
+            android:background="@drawable/round_corners_background"
+            android:backgroundTint="@color/addit_color"/>
         <TextView
             android:id="@+id/TV_count"
             android:layout_weight="1"
@@ -72,6 +73,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/icon_plus"
             app:tint="@color/white"
-            android:background="@drawable/round_corners_background" />
+            android:background="@drawable/round_corners_background"
+            android:backgroundTint="@color/addit_color"/>
     </LinearLayout>
 </LinearLayout>

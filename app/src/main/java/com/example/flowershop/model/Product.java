@@ -1,10 +1,11 @@
-package com.example.flowershop.entity;
+package com.example.flowershop.model;
 
 
-public class Product {
+import java.util.List;
+
+public class Product implements Comparable<Product>{
     String id;
     String name;
-    String description;
     int price;
     String imageURL;
     int count;//доп поле, в записи бд product его нет, извлекается из basket или order
@@ -17,9 +18,6 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
     public void setPrice(int price) {
         this.price = price;
     }
@@ -31,9 +29,6 @@ public class Product {
     }
     public String getName() {
         return name;
-    }
-    public String getDescription() {
-        return description;
     }
     public int getPrice() {
         return price;
@@ -55,5 +50,10 @@ public class Product {
     }
     public int getSum(){
         return count*price;
+    }
+
+    @Override
+    public int compareTo(Product o) {
+        return Integer.compare(this.price, o.getPrice());
     }
 }
