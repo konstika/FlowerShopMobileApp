@@ -18,6 +18,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -397,6 +399,7 @@ public class FirestoreHandler {
                                             orders.add(orderValue);
                                         }
                                         if (orders.size() == orderLiveDataList.size()) {
+                                            Collections.sort(orders);
                                             ordersLiveData.postValue(orders);
                                         }
                                     }

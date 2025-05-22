@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class Order {
+public class Order implements Comparable<Order>{
     String id;
     String userID;
     Timestamp date_order;
@@ -85,5 +85,10 @@ public class Order {
     }
     public List<Product> getProducts() {
         return this.products;
+    }
+
+    @Override
+    public int compareTo(Order order) {
+        return -1*this.date_order.compareTo(order.getDate_order());
     }
 }
