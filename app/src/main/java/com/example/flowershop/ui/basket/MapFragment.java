@@ -54,6 +54,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapKitFactory.initialize(requireContext());
         searchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED);
     }
 

@@ -1,6 +1,9 @@
 package com.example.flowershop;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -8,6 +11,8 @@ import android.view.View;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -26,8 +31,7 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey("e1dd47ae-8b52-47dc-8a62-98002f8f601e");
-        MapKitFactory.initialize(this);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
             });
         }
     }
+
     public void createViewForAuthUsers(){
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_nav);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -84,10 +89,17 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
         SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
         sharedPreferences.edit().putString("userID", FirestoreHandler.getInstance().getUserId()).apply();
         createViewForAuthUsers();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
+        Intent serviceIntent = new Intent(this, OrderStatusService.class);
+        startForegroundService(serviceIntent);
     }
 
     @Override
     public void onExit(){
+        Intent serviceIntent = new Intent(this, OrderStatusService.class);
+        stopService(serviceIntent);
         SharedPreferences sharedPreferences = getSharedPreferences("user",MODE_PRIVATE);
         sharedPreferences.edit().clear().apply();
         createViewForUnAuthUsers();
