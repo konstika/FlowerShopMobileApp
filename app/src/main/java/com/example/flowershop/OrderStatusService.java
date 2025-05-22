@@ -52,6 +52,7 @@ public class OrderStatusService extends Service {
     @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(startId>1){return START_STICKY;}
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Отслеживание заказов")
                 .setContentText("Служба работает в фоновом режиме")

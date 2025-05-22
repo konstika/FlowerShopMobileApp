@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
         }else {
             FirestoreHandler.getInstance().setUser(userId).observeForever(result -> {
                 if(result){
+                    Intent serviceIntent = new Intent(this, OrderStatusService.class);
+                    startForegroundService(serviceIntent);
                     createViewForAuthUsers();
                 }else{
                     createViewForUnAuthUsers();
