@@ -12,7 +12,7 @@
         android:id="@+id/CIV_ava"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/ava"
+        android:src="@mipmap/ic_app"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <TextView

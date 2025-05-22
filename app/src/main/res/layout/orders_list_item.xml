@@ -2,12 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="310dp"
+    android:layout_height="320dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:orientation="vertical"
     android:background="@drawable/round_corners_background"
     android:backgroundTint="@color/white"
+    android:layout_marginHorizontal="2dp"
     android:padding="10dp">
     <TextView
         android:id="@+id/TV_date_order"
@@ -16,12 +17,16 @@
         android:text="Заказ от 08.05.2025"
         android:textSize="20sp"
         android:textStyle="bold"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
     <TextView
         android:id="@+id/TV_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Адрес: г. Москва, пр-кт Вернадского, д.78"
         android:textSize="16sp"/>
+    </ScrollView>
     <TextView
         android:id="@+id/TV_date"
         android:layout_width="match_parent"

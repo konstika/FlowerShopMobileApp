@@ -1,9 +1,10 @@
 package com.example.flowershop.model;
 
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Product implements Comparable<Product>{
+public class Product implements Comparable<Product>, Serializable {
     String id;
     String name;
     int price;

@@ -168,9 +168,9 @@ public class FirestoreHandler {
                 Query query = db.collection("product")
                         .whereGreaterThanOrEqualTo("price", minPrice)
                         .whereLessThanOrEqualTo("price", maxPrice);
-                if(sort.equals("SORT")){
+                if(sort.equals("DESCENDING")){
                     query = query.orderBy("price", Query.Direction.DESCENDING);
-                }else if(sort.equals("REVERSE")){
+                }else if(sort.equals("ASCENDING")){
                     query = query.orderBy("price", Query.Direction.ASCENDING);
                 }
                 query.get()

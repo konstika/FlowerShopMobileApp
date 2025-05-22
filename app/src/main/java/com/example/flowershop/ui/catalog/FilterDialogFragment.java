@@ -18,15 +18,22 @@ import androidx.fragment.app.Fragment;
 
 import com.example.flowershop.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class FilterDialogFragment extends DialogFragment {
     private int minPrice = 0;
     private int defaultMinPrice = 0;
     private int maxPrice = 10000;
     private int defaultMaxPrice = 10000;
     private String sort = "NOT";
-    FilterDialogListener listener;
+    private List<String> sorts = Arrays.asList(new String[]{"NOT", "DESCENDING", "ASCENDING"});
+    private FilterDialogListener listener;
 
-    public FilterDialogFragment(Fragment fragment){
+    public FilterDialogFragment(Fragment fragment, int minPrice, int maxPrice, String sort){
+        this.minPrice=minPrice;
+        this.maxPrice=maxPrice;
+        this.sort=sort;
         if (fragment instanceof FilterDialogListener) {
             listener = (FilterDialogListener) fragment;
         }
@@ -44,6 +51,8 @@ public class FilterDialogFragment extends DialogFragment {
         SeekBar seekBarMin = view.findViewById(R.id.seek_bar_min);
         seekBarMin.setMin(defaultMinPrice);
         seekBarMin.setMax(defaultMaxPrice);
+        seekBarMin.setProgress(minPrice);
+        tvMinPrice.setText("Максимальная цена: "+minPrice+"₽");
         seekBarMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -59,6 +68,8 @@ public class FilterDialogFragment extends DialogFragment {
         SeekBar seekBarMax = view.findViewById(R.id.seek_bar_max);
         seekBarMax.setMin(defaultMinPrice);
         seekBarMax.setMax(defaultMaxPrice);
+        seekBarMax.setProgress(maxPrice);
+        tvMaxPrice.setText("Максимальная цена: "+maxPrice+"₽");
         seekBarMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -71,15 +82,16 @@ public class FilterDialogFragment extends DialogFragment {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
         Spinner spinner = view.findViewById(R.id.spinner_sort);
-        String[] sorts = new String[]{"Нет", "По убыванию", "По возрастанию"};
+        String[] sortsStr = new String[]{"Нет", "По убыванию", "По возрастанию"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (getContext(), android.R.layout.simple_spinner_item, sorts);
+                (getContext(), android.R.layout.simple_spinner_item, sortsStr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setSelection(sorts.indexOf(sort));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                sort = new String[]{"NOT", "SORT", "REVERSE"}[i];
+                sort = sorts.get(i);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

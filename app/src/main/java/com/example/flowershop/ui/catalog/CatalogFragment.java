@@ -76,7 +76,8 @@ public class CatalogFragment extends Fragment implements FilterDialogFragment.Fi
         butFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FilterDialogFragment filterDialog = new FilterDialogFragment(CatalogFragment.this);
+                FilterDialogFragment filterDialog =
+                        new FilterDialogFragment(CatalogFragment.this, minPrice, maxPrice, sort);
                 filterDialog.show(getChildFragmentManager(), null);
             }
         });
