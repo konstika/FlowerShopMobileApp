@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements AuthListener {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_nav);
         FragmentManager fragmentManager = getSupportFragmentManager();
         bottomNavigation.setVisibility(View.VISIBLE);
+        bottomNavigation.setSelectedItemId(R.id.catalog);
         fragmentManager.beginTransaction().replace(R.id.fragment_container, new CatalogFragment()).commit();
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -42,6 +42,7 @@ public class OrderFragment extends Fragment {
     private boolean dateSeted;
     private boolean timeSeted;
     private List<Product> productsInBasket;
+    private int sum;
 
     public OrderFragment() {}
 
@@ -55,6 +56,7 @@ public class OrderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             productsInBasket = (List<Product>) getArguments().getSerializable("products_in_basket");
+            sum = getArguments().getInt("sum");
         } else {productsInBasket = new ArrayList<>();}
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
@@ -91,6 +93,9 @@ public class OrderFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        TextView tvSum = view.findViewById(R.id.TV_sum);
+        tvSum.setText("К оплате: "+sum+"₽");
 
         //пункт меню: выбор адреса
         TextView select_address = view.findViewById(R.id.menu_select_address);

@@ -7,12 +7,6 @@ public class User {
     String phone;
     String basketID;
     public User(){}
-    public User(String id, String username, String password, String phone){
-        this.id=id;
-        this.username=username;
-        this.password=password;
-        this.phone=phone;
-    }
     public void setId(String id) {
         this.id = id;
     }
@@ -31,9 +25,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    public void setPhone(String phone) {this.phone = phone;}
     public String getPhone() {
         return phone;
     }

@@ -69,6 +69,7 @@ public class BasketFragment extends Fragment {
                     OrderFragment orderFragment = new OrderFragment();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("products_in_basket",(Serializable) basketAdapter.getItems());
+                    bundle.putInt("sum", calculateSum(basketAdapter.getItems()));
                     orderFragment.setArguments(bundle);
                     requireActivity().getSupportFragmentManager().beginTransaction().
                             replace(R.id.fragment_container, orderFragment, "ORDER")
@@ -78,10 +79,7 @@ public class BasketFragment extends Fragment {
         });
     }
     public void changeSum(List<Product> products){
-        int sum = 0;
-        for (Product product: products) {
-            sum+= product.getSum();
-        }
+        int sum = calculateSum(products);
         tvSum.setText(sum+"₽");
         if(sum==0){
             basketList.setVisibility(View.GONE);
@@ -90,5 +88,12 @@ public class BasketFragment extends Fragment {
             basketList.setVisibility(View.VISIBLE);
             tvEmpty.setVisibility(View.GONE);
         }
+    }
+    public int calculateSum(List<Product> products){
+        int sum = 0;
+        for (Product product: products) {
+            sum+= product.getSum();
+        }
+        return sum;
     }
 }
